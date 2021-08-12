@@ -15,7 +15,7 @@ FILES = $(SRC)main.c $(SRC)functions.c
 
 # outputs
 exe: $(FILES)
-	$(CC) $(EXEFLAGS) -o "$(OUT)foo.exe"
+	$(CC) $(EXEFLAGS) -o "$(OUT)shell.exe"
 
 debug: $(CC) debug.o -o "$(OUT)debug"
 

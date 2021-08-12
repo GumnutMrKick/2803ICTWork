@@ -1,6 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+#include <time.h>
+
+// #include <unistd.h>
+// #include <sys/types.h>
+// #include <sys/stat.h>
 
 #include "includes.h"
 
@@ -10,30 +16,57 @@
 ///////// main commands /////////
 
 // calculates the given 'expr' exspression
-void calc (char* argv) {
+void calc (char* in_argv) {
+
+	// check for args
+	if (checkArgs(in_argv)) {
+
+		printf("no arguments recieved\n");
+		return;
+
+	}
 
 	// initialise some variables
 	int answer, length;
 
 	// find the string length
-	length = strlen(argv);
+	length = strlen(in_argv);
 
 	// calculate and announace the answer
-	printf("The answer is: %d", ulate(argv, 0, length));
+	printf("The answer is: %d\n", ulate(in_argv, 0, length));
 
 }
 
 // displays the current location appropriate time
-void time () {
+void myTime () {
 
+	// variable definition
+	time_t curr_time;
+	struct tm * format;
 
+	// get and translate time
+	time(&curr_time);
+	format = localtime(&curr_time);
+
+	// display time
+	printf("the current local date and time is: %s, respectively", asctime(format));
 
 }
 
 // prints out the current working directory
 void path () {
 
+	// variable definition
+	char dir[MAXIN];
 
+	if (getcwd(dir, sizeof(dir)) == NULL) {
+
+		printf("there was an issue getting the directory\n");
+		return;
+
+	}
+
+	printf("the current working directory is: %s\n", dir);
 
 }
 
@@ -45,39 +78,121 @@ void sys () {
 }
 
 // puts files of 'filenames' in the given 'dirname' directory
-void put (char* argv) {
+void put (char* in_argv) {
+
+	// check for args
+	if (checkArgs(in_argv)) {
+
+		printf("no arguments recieved\n");
+		return;
+
+	}
+
+	// give disclaimer
+	printf("please note that this will not work as desired if the filenames have spaces\n");
+
+	// declare variables
+	char * files = popFront(in_argv), * flag_addr, * directory;
+
+	// check for the flag
+	flag_addr = strstr(files, " -f");
+
+	// if flag is present then remove it from files args
+	if (flag_addr)
+		flag_addr[0] = '\0';
+
+	// generate directory path
+	directory = strcat(strcat("./", in_argv), "/");
+
+	if (checkDirExistance(directory))
+		// delete the directory if flag was present
+		if (flag_addr) {
 
 
+
+		// if it wasn't present then error
+		} else {
+
+			printf("an error has occured, that directory already exists,\n add the flag -f to the end if you would like to overwrite\n");
+			return;
+
+		}
+
+	// create the directory
+
+
+	// copy the files to the directory
+	copyFiles(files, directory);
 
 }
 
 // prints the contents of the file at 'filename'
-void get (char* argv) {
+void get (char * in_file_name) {
 
+	// check for args
+	if (checkArgs(in_file_name)) {
 
+		printf("no arguments recieved\n");
+		return;
+
+	}
+
+	// variable definition
+	FILE * file;
+	char * file_name, line[MAXIN];
+	int line_num = 1;
+
+	// clean the file name in the arguments
+	popFront(in_file_name);
+
+	// open the file
+	file = fopen(in_file_name, "r");
+
+	if (file == NULL) {
+
+		printf("there was an issue opening the file\n");
+		return;
+
+	}
+
+	// print the lines
+	while (fgets(line, sizeof(line), file)) {
+
+		// print the line
+		printf("line %i : %s\n", line_num, line);
+
+		// pause if the current line number is divisable by 40
+		if((line_num % 40) == 0)
+			getchar();
+
+		// increment the line number
+		line_num++;
+
+	}
 
 }
 
 ///////// /main commands /////////
 ///////// supporting commands /////////
 
-// a function which prints describes the various commands avaliable to the user
-void man () {
+// pops off the front of the string to the first instance of a space
+// returning the new array and terminating the old with \0 making it the popped
+char* popFront (char * str) {
 
+	for (int x=0; x < (MAXIN - 1); x++)
+		if ((str[x] == '\0') || (str[x] == ' ')) {
 
+			str[x] = '\0';
+			return (str + x + 1);
+
+		}
 
 }
 
-// appropriatly processes the users input
-char* processInput (char* in_buffer) {
+// detects if the supplied string had been marked as empty by the input in main
+bool checkArgs (char *in_argv) {
 
-	for (int x=0; x < (MAXIN - 1); x++)
-		if ((in_buffer[x] == '\0') || (in_buffer[x] == ' ')) {
-
-			in_buffer[x] = '\0';
-			return (in_buffer + x + 1);
-
-		}
+	return((in_argv[0] == '\0'));
 
 }
 
@@ -110,12 +225,40 @@ int ulate (char* str, int start, int end) {
 
 }
 
-///////// /supporting commands /////////
+// checks for the existance of a directory
+bool checkDirExistance (char * dir_path) {
 
-// a test function
-int foo (char* str) {
+    // struct stat info;
 
-	printf("hello %s", str);
-	return 0;
+    // if (stat(dir_path, &info) != 0)
+    //     return false;
+    // else
+	// 	return (info.st_mode & S_IFDIR);
+
+	return true;
 
 }
+
+// once given a list of files and a destination, this function will
+// recursivly attempt to copy each one to the desired location
+int copyFiles (char * files, char * dest) {
+
+	// test for end
+	if (checkArgs(files))
+		return 0;
+
+	// variable definition
+	char * new_files = popFront(files);
+
+	// declare attempt start
+	printf("copying %s : ... ", files);
+
+	// attempt to copy file
+
+
+	// try to copy next file
+	return (1 + copyFiles(new_files, dest));
+
+}
+
+///////// /supporting commands /////////

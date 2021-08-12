@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
 
 #include "includes.h"
@@ -13,54 +14,61 @@ int main(int argc, char* argv[]) {
 
 	// running flag
 	bool running = true;
-	char in_buffer[MAXIN], *in_argv;
+	char * command, * in_argv;
+	int in_len;
 
 	// introduce program
 	printf("Welcome to S5132483's shell program for 2803ICT Assignment 1\n");
-	printf("PLEASE NOTE: all input has an arbitrary limit of 1000 characters ");
+	printf("PLEASE NOTE: all input has an arbitrary limit of 1000 characters\n");
+
 
 	// main shell loop
 	while (running) {
 
-		printf("\n\n$> ");
+		// free the array
+		free(command);
+
+		// allocate the input
+		command = (char*)calloc(MAXIN, sizeof(char));
+
+		printf("$> ");
 
 		// take user input
-		scanf("%1000s", in_buffer);
-
-
-		printf("%s", in_buffer);
-
+		fgets(command, (MAXIN - 1), stdin);
+		
+		// remove stupid newline crap and prepare for no arg detection
+		in_len = strlen(command);
+		command[in_len - 1] = '\0';
+		command[in_len] = '\0';
+		
 		// process user input
-		in_argv = processInput(in_buffer);
-
-		// printf("b", (in_buffer == "calc"));
-
-
+		in_argv = popFront(command);
 
 		// act on user input
 		//man
-		if (in_buffer == "man") {
+		if (!strcmp(command, "man")) {
 
+			continue;
 		}
 
 		// calc
-		if (in_buffer == "calc") { 
-		
+		if (!strcmp(command, "calc")) { 
+
 			calc(in_argv);
 			continue;
 
 		}
 
 		// time
-		if (in_buffer == "time") {
+		if (!strcmp(command, "time")) {
 			
-			time();
+			myTime();
 			continue;
 		
 		}
 
 		// path
-		if (in_buffer == "path") {
+		if (!strcmp(command, "path")) {
 			
 			path();
 			continue;
@@ -68,7 +76,7 @@ int main(int argc, char* argv[]) {
 		}
 
 		// sys
-		if (in_buffer == "sys") {
+		if (!strcmp(command, "sys")) {
 			
 			sys();
 			continue;
@@ -76,7 +84,7 @@ int main(int argc, char* argv[]) {
 		}
 
 		// put
-		if (in_buffer == "put") {
+		if (!strcmp(command, "put")) {
 			
 			put(in_argv);
 			continue;
@@ -84,7 +92,7 @@ int main(int argc, char* argv[]) {
 		}
 
 		// get
-		if (in_buffer == "get"){
+		if (!strcmp(command, "get")){
 
 			get(in_argv);
 			continue;
@@ -92,11 +100,11 @@ int main(int argc, char* argv[]) {
 		}
 
 		// quit
-		if (in_buffer == "quit")
+		if (!strcmp(command, "quit"))
 			return 0;
 
 		// code for unknown command
-		printf("unkown command found, launch program with 'man' argument or run the man command to see command documentation.");
+		printf("unkown command found\n");
 
 	}
 
