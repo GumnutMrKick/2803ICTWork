@@ -5,8 +5,8 @@
 #include <time.h>
 
 // #include <unistd.h>
-// #include <sys/types.h>
-// #include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include "includes.h"
 
@@ -92,7 +92,7 @@ void put (char* in_argv) {
 	printf("please note that this will not work as desired if the filenames have spaces\n");
 
 	// declare variables
-	char * files = popFront(in_argv), * flag_addr, * directory, * command, line[MAXIN];
+	char * files = popFront(in_argv), * flag_addr, directory[MAXIN], * command, line[MAXIN];
 	FILE * del_dir;
 	int line_num = 0;
 
@@ -107,13 +107,23 @@ void put (char* in_argv) {
 		printf("flag found");
 	}
 
-	printf("%s", files);
+	printf("%s\n", files);
+
+	printf("hello");
 
 	// generate directory path
-	directory = strcat("./", in_argv);
-	directory = strcat(directory, "/");
+	directory[0] = '\0';
+	strcat(directory, "./");
+	printf("%s\n", directory);
 
-	printf("i GOT HERE");
+	strcat(directory, in_argv);
+	printf("%s\n", directory);
+	strcat(directory, "/");
+	printf("%s\n", directory);
+
+	printf("i GOT HERE\n");
+
+	printf("\nthe answer%s\n", checkDirExistance(directory));
 
 	if (checkDirExistance(directory))
 		printf("dir alrady exists");
@@ -165,7 +175,7 @@ void put (char* in_argv) {
 
 
 	// copy the files to the directory
-	copyFiles(files, directory);
+	// copyFiles(files, directory);
 
 }
 
@@ -269,18 +279,28 @@ int ulate (char* str, int start, int end) {
 }
 
 // checks for the existance of a directory
-bool checkDirExistance (char * dir_path) {
+bool checkDirExistance (const char * dir_path) {
+
 
 	printf("fuck");
+	// prepare to make check
+    struct stat info;
 
-    // struct stat info;
+	// make check
+    int statRC = stat( path, &info );
 
-    // if (stat(dir_path, &info) != 0)
-    //     return false;
-    // else
-	// 	return (info.st_mode & S_IFDIR);
 
-	return true;
+	printf("%i\n", statRC);
+	printf("%s\n", ( info.st_mode & S_IFDIR ));
+
+    if( statRC != 0 )
+    {
+        return -1;
+    }
+
+
+    return ( info.st_mode & S_IFDIR ) ? 1 : 0;
+
 
 }
 
