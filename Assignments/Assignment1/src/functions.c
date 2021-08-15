@@ -49,7 +49,7 @@ void myTime () {
 	format = localtime(&curr_time);
 
 	// display time
-	printf("the current local date and time is: %s, respectively", asctime(format));
+	printf("the current local date and time is: %s", asctime(format));
 
 }
 
@@ -92,7 +92,9 @@ void put (char* in_argv) {
 	printf("please note that this will not work as desired if the filenames have spaces\n");
 
 	// declare variables
-	char * files = popFront(in_argv), * flag_addr, * directory;
+	char * files = popFront(in_argv), * flag_addr, * directory, * command, line[MAXIN];
+	FILE * del_dir;
+	int line_num = 0;
 
 	// check for the flag
 	flag_addr = strstr(files, " -f");
@@ -108,7 +110,32 @@ void put (char* in_argv) {
 		// delete the directory if flag was present
 		if (flag_addr) {
 
+			// generate the command
+			command = strcat(strcat("rm -r \"", directory), "\"");
 
+			// run the command
+			del_dir = popen(command, "r");
+
+			// get the result
+			if (del_dir != NULL) {
+
+				// print the lines
+				while (fgets(line, sizeof(line), del_dir)) {
+
+					// print the line
+					printf("line %i : %s\n", line_num, line);
+
+					// pause if the current line number is divisable by 40
+					if((line_num % 40) == 0)
+						getchar();
+
+					// increment the line number
+					line_num++;
+
+				}
+
+
+			}
 
 		// if it wasn't present then error
 		} else {
