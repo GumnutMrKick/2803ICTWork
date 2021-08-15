@@ -41,7 +41,7 @@ void man ();
 int ulate (char* str, int start, int end);
 
 // checks for the existance of a directory
-bool checkDirExistance (const char * dir_path);
+int checkDirExistance (char * dir_path);
 
 // once given a list of files and a destination, this function will
 // recursivly attempt to copy each one to the desired location

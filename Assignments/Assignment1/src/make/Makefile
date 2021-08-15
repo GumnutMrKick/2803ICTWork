@@ -4,7 +4,7 @@ SRC = ../
 OUT = ../../out/
 
 # compiler
-CC = gcc
+CC = cc
 
 # compiler flags
 FLAGS = -B -c

@@ -9,9 +9,6 @@
 // main program loop
 int main(int argc, char* argv[]) {
 	
-	// check to see if man has been run
-	printf("%d", argc);
-
 	// running flag
 	bool running = true;
 	char * command, * in_argv;
