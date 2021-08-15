@@ -96,54 +96,70 @@ void put (char* in_argv) {
 	FILE * del_dir;
 	int line_num = 0;
 
+	printf("%s", files);
+
 	// check for the flag
 	flag_addr = strstr(files, " -f");
 
 	// if flag is present then remove it from files args
-	if (flag_addr)
+	if (flag_addr != NULL) {
 		flag_addr[0] = '\0';
+		printf("flag found");
+	}
+
+	printf("%s", files);
 
 	// generate directory path
-	directory = strcat(strcat("./", in_argv), "/");
+	directory = strcat("./", in_argv);
+	directory = strcat(directory, "/");
+
+	printf("i GOT HERE");
 
 	if (checkDirExistance(directory))
-		// delete the directory if flag was present
-		if (flag_addr) {
+		printf("dir alrady exists");
 
-			// generate the command
-			command = strcat(strcat("rm -r \"", directory), "\"");
+	// 	// delete the directory if flag was present
+	// 	if (flag_addr) {
 
-			// run the command
-			del_dir = popen(command, "r");
+	// 		printf("flag exists");
 
-			// get the result
-			if (del_dir != NULL) {
+	// 		// generate the command
+	// 		command = strcat(strcat("rm -r \"", directory), "\"");
 
-				// print the lines
-				while (fgets(line, sizeof(line), del_dir)) {
+	// 		// run the command
+	// 		del_dir = popen(command, "r");
 
-					// print the line
-					printf("line %i : %s\n", line_num, line);
-
-					// pause if the current line number is divisable by 40
-					if((line_num % 40) == 0)
-						getchar();
-
-					// increment the line number
-					line_num++;
-
-				}
+	// 		// get the result
+	// 		if (del_dir != NULL) {
 
 
-			}
 
-		// if it wasn't present then error
-		} else {
+	// 			// print the lines
+	// 			while (fgets(line, sizeof(line), del_dir)) {
 
-			printf("an error has occured, that directory already exists,\n add the flag -f to the end if you would like to overwrite\n");
-			return;
+	// 				// print the line
+	// 				printf("line %i : %s\n", line_num, line);
 
-		}
+	// 				// pause if the current line number is divisable by 40
+	// 				if((line_num % 40) == 0)
+	// 					getchar();
+
+	// 				// increment the line number
+	// 				line_num++;
+
+	// 			}
+
+
+	// 		}
+
+	// 	// if it wasn't present then error
+	// 	} else {
+
+	// 		printf("an error has occured, that directory already exists,\n add the flag -f to the end if you would like to overwrite\n");
+	// 		return;
+
+	// 	}
+	// }
 
 	// create the directory
 
@@ -254,6 +270,8 @@ int ulate (char* str, int start, int end) {
 
 // checks for the existance of a directory
 bool checkDirExistance (char * dir_path) {
+
+	printf("fuck");
 
     // struct stat info;
 
