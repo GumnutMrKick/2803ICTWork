@@ -1,0 +1,1 @@
+#define MAXIN 1001 // the maximum number of characters the user can input
