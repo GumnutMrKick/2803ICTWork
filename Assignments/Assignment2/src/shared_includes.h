@@ -3,12 +3,6 @@
 */ 
 #define MAXIN 1001
 
-/*!
-    MAXIN = a global constant contains as an integer describing the maxium ammount of times either program should reattempt a failed
-	network task with the hope that it will succeed next time
-*/ 
-#define MAXATTEMPTS 5
-
 // includes
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,7 +59,7 @@ void unPopFront (char * str);
 /*!
     
 	<summary>
-        this function cleans up after fget's crap
+        this function cleans up after fget's removing it's tailing newline character
     </summary>
 
 	<param name="str">the string which this function concerns</param>

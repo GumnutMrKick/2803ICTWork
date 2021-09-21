@@ -185,6 +185,8 @@ int main(int argc, char* argv[]) {
 			// send the command
 			send(socket_id, client_buffer, MAXIN, 0);
 
+			continue;
+
 		}
 
 		// END
@@ -221,7 +223,19 @@ int main(int argc, char* argv[]) {
 
 		}
 
-		result = 0;
+		// if this has been reached then the command sent is not protocol
+		// quit the server
+		// refresh buffer
+		memset(client_buffer, '\0', MAXIN);
+		
+		// make message
+		strcpy(client_buffer, "QUIT");
+
+		// send the command
+		send(socket_id, client_buffer, MAXIN, 0);
+
+		// break the loop
+		break;
 
 	}
 

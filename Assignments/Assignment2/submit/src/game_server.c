@@ -248,7 +248,7 @@ int main(int argc, char* const argv[]) {
 
 		// setup timeout
 		struct timeval tv;
-		tv.tv_sec = TIMEOUT_LIMTI;
+		tv.tv_sec = TIMEOUT_LIMIT;
 		tv.tv_usec = 0;
 		setsockopt(client_socket_id, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
 
@@ -586,7 +586,7 @@ int main(int argc, char* const argv[]) {
 									}
 
 								// announce to console
-								printf("game over due to lack of players\n");
+								printf("player %d has won\n", (x + 1));
 
 								// handle deallocation and closing sequences
 								close(server_socket_id);
